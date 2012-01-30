@@ -645,6 +645,7 @@ Example:
 			  (x-display-pixel-height frame))
 		      border)
 		   (frame-char-height frame))))
+	 (x-gtk-use-system-tooltips nil) ; Don't use Gtk+ tooltip in Emacs 24
 	 (mpos (with-selected-window window (mouse-pixel-position)))
 	 (mframe (car mpos))
 	 default-frame-alist)
