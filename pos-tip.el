@@ -233,11 +233,6 @@
   :type 'integer
   :group 'pos-tip)
 
-(defcustom pos-tip-background-color (face-background 'tooltip)
-  "Default background color of pos-tip's tooltip."
-  :type 'string
-  :group 'pos-tip)
-
 (defcustom pos-tip-tab-width nil
   "Tab width used for `pos-tip-split-string' and `pos-tip-fill-string'
 to expand tab characters. nil means use default value of `tab-width'."
