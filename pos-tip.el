@@ -233,6 +233,20 @@
   :type 'integer
   :group 'pos-tip)
 
+(defcustom pos-tip-foreground-color nil
+  "Default foreground color of pos-tip's tooltip.
+When `nil', look up the foreground color of the `tooltip' face."
+  :type '(choice (const :tag "Default" nil)
+                 string)
+  :group 'pos-tip)
+
+(defcustom pos-tip-background-color nil
+  "Default background color of pos-tip's tooltip.
+When `nil', look up the background color of the `tooltip' face."
+  :type '(choice (const :tag "Default" nil)
+                 string)
+  :group 'pos-tip)
+
 (defcustom pos-tip-tab-width nil
   "Tab width used for `pos-tip-split-string' and `pos-tip-fill-string'
 to expand tab characters. nil means use default value of `tab-width'."
@@ -529,20 +543,24 @@ in FRAME. Return new mouse position like (FRAME . (X . Y))."
   "Compute the foreground color to use for tooltip.
 
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
-If it is nil, use the foreground color of the `tooltip' face."
+If it is nil, use `pos-tip-foreground-color'or the foreground color of the
+`tooltip' face."
   (or (and (facep tip-color)
            (face-attribute tip-color :foreground))
       (car-safe tip-color)
+      pos-tip-foreground-color
       (face-foreground 'tooltip)))
 
 (defun pos-tip-compute-background-color (tip-color)
   "Compute the background color to use for tooltip.
 
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
-If it is nil, use the background color of the `tooltip' face."
+If it is nil, use `pos-tip-background-color' or the background color of the
+`tooltip' face."
   (or (and (facep tip-color)
            (face-attribute tip-color :background))
       (cdr-safe tip-color)
+      pos-tip-background-color
       (face-background 'tooltip)))
 
 (defun pos-tip-show-no-propertize
@@ -833,10 +851,11 @@ using frame's default font with TIP-COLOR.
 Return pixel position of tooltip relative to top left corner of frame as
 a cons cell like (X . Y).
 
-TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR)
-used to specify *only* foreground-color and background-color of tooltip.
-If omitted, use the foreground and background color of the `tooltip' face
-instead.
+TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR .
+BACKGROUND-COLOR) used to specify *only* foreground-color and
+background-color of tooltip.  If omitted, use
+`pos-tip-foreground-color' and `pos-tip-background-color' or the
+foreground and background color of the `tooltip' face instead.
 
 Omitting POS and WINDOW means use current position and selected window,
 respectively.
