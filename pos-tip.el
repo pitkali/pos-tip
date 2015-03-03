@@ -233,14 +233,18 @@
   :type 'integer
   :group 'pos-tip)
 
-(defcustom pos-tip-foreground-color (face-foreground 'tooltip)
-  "Default foreground color of pos-tip's tooltip."
-  :type 'string
+(defcustom pos-tip-foreground-color nil
+  "Default foreground color of pos-tip's tooltip.
+When `nil', look up the foreground color of the `tooltip' face."
+  :type '(choice (const :tag "Default" nil)
+                 string)
   :group 'pos-tip)
 
-(defcustom pos-tip-background-color (face-background 'tooltip)
-  "Default background color of pos-tip's tooltip."
-  :type 'string
+(defcustom pos-tip-background-color nil
+  "Default background color of pos-tip's tooltip.
+When `nil', look up the background color of the `tooltip' face."
+  :type '(choice (const :tag "Default" nil)
+                 string)
   :group 'pos-tip)
 
 (defcustom pos-tip-tab-width nil
@@ -539,21 +543,25 @@ in FRAME. Return new mouse position like (FRAME . (X . Y))."
   "Compute the foreground color to use for tooltip.
 
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
-If it is nil, use `pos-tip-foreground-color'."
+If it is nil, use `pos-tip-foreground-color'or the foreground color of the
+`tooltip' face."
   (or (and (facep tip-color)
            (face-attribute tip-color :foreground))
       (car-safe tip-color)
-      pos-tip-foreground-color))
+      pos-tip-foreground-color
+      (face-foreground 'tooltip)))
 
 (defun pos-tip-compute-background-color (tip-color)
   "Compute the background color to use for tooltip.
 
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
-If it is nil, use `pos-tip-background-color'."
+If it is nil, use `pos-tip-background-color' or the background color of the
+`tooltip' face."
   (or (and (facep tip-color)
            (face-attribute tip-color :background))
       (cdr-safe tip-color)
-      pos-tip-background-color))
+      pos-tip-background-color
+      (face-background 'tooltip)))
 
 (defun pos-tip-show-no-propertize
   (string &optional tip-color pos window timeout pixel-width pixel-height frame-coordinates dx dy)
@@ -843,10 +851,11 @@ using frame's default font with TIP-COLOR.
 Return pixel position of tooltip relative to top left corner of frame as
 a cons cell like (X . Y).
 
-TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR)
-used to specify *only* foreground-color and background-color of tooltip.
-If omitted, use `pos-tip-foreground-color' and `pos-tip-background-color'
-instead.
+TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR .
+BACKGROUND-COLOR) used to specify *only* foreground-color and
+background-color of tooltip.  If omitted, use
+`pos-tip-foreground-color' and `pos-tip-background-color' or the
+foreground and background color of the `tooltip' face instead.
 
 Omitting POS and WINDOW means use current position and selected window,
 respectively.
