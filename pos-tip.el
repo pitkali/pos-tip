@@ -545,7 +545,8 @@ in FRAME. Return new mouse position like (FRAME . (X . Y))."
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
 If it is nil, use `pos-tip-foreground-color' or the foreground color of the
 `tooltip' face."
-  (or (and (facep tip-color)
+  (or (and tip-color
+	   (facep tip-color)
            (face-attribute tip-color :foreground))
       (car-safe tip-color)
       pos-tip-foreground-color
@@ -557,7 +558,8 @@ If it is nil, use `pos-tip-foreground-color' or the foreground color of the
 TIP-COLOR is a face or a cons cell like (FOREGROUND-COLOR . BACKGROUND-COLOR).
 If it is nil, use `pos-tip-background-color' or the background color of the
 `tooltip' face."
-  (or (and (facep tip-color)
+  (or (and tip-color
+	   (facep tip-color)
            (face-attribute tip-color :background))
       (cdr-safe tip-color)
       pos-tip-background-color
