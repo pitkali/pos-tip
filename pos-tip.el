@@ -843,8 +843,26 @@ of display. Omitting FRAME means use display that selected frame is in."
 	       pos-tip-internal-border-width)
 	    1))))
 
+(defun pos-tip-font-char-width (font-family frame)
+  "Return the character width of FONT-FAMILY.
+If FONT-FAMILY is nil, return the character width of the FRAME font."
+  (if (null font-family)
+      (frame-char-width frame)
+    (let* ((font (font-info font-family))
+	   (max-width (aref font 7))
+	   (space-width (aref font 10))
+	   (average-width (aref font 11)))
+      (max max-width space-width average-width))))
+
+(defun pos-tip-font-char-height (font-family frame)
+  "Return the character height of FONT-FAMILY.
+If FONT-FAMILY is nil, return the character height of the FRAME font."
+  (if (null font-family)
+      (frame-char-height frame)
+    (aref (font-info font-family) 3)))
+
 (defun pos-tip-show
-  (string &optional tip-color pos window timeout width frame-coordinates dx dy)
+    (string &optional tip-color pos window timeout width frame-coordinates dx dy font-family)
   "Show STRING in a tooltip, which is a small X window, at POS in WINDOW
 using frame's default font with TIP-COLOR.
 
@@ -885,6 +903,9 @@ DY specifies vertical offset in pixel. This makes the calculations done
 without considering the height of object at POS, so the object might be
 hidden by the tooltip.
 
+FONT-FAMILLY specifies the font familly to use, otherwise it will use the
+frame font.
+
 See also `pos-tip-show-no-propertize'."
   (unless window
     (setq window (selected-window)))
@@ -894,8 +915,8 @@ See also `pos-tip-show-no-propertize'."
 	 (w-h (pos-tip-string-width-height string))
          (fg (pos-tip-compute-foreground-color tip-color))
          (bg (pos-tip-compute-background-color tip-color))
-         (frame-font (find-font (font-spec :name (frame-parameter frame 'font))))
-         (tip-face-attrs (list :font frame-font :foreground fg :background bg)))
+         (font (or font-family (find-font (font-spec :name (frame-parameter frame 'font)))))
+	 (tip-face-attrs (list (if font-family :family :font) font :foreground fg :background bg)))
     (cond
      ((and width
 	   (> (car w-h) width))
@@ -906,10 +927,10 @@ See also `pos-tip-show-no-propertize'."
       (setq string (pos-tip-truncate-string string max-width max-height)
 	    w-h (pos-tip-string-width-height string))))
     (pos-tip-show-no-propertize
-     (propertize string 'face tip-face-attrs)
+     (propertize string 'face tip-face-attrs 'font-lock-ignore t)
      tip-color pos window timeout
-     (pos-tip-tooltip-width (car w-h) (frame-char-width frame))
-     (pos-tip-tooltip-height (cdr w-h) (frame-char-height frame) frame)
+     (pos-tip-tooltip-width (car w-h) (pos-tip-font-char-width font-family frame))
+     (pos-tip-tooltip-height (cdr w-h) (pos-tip-font-char-height font-family frame) frame)
      frame-coordinates dx dy)))
 
 (defalias 'pos-tip-hide 'x-hide-tip
