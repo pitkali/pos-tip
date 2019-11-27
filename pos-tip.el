@@ -157,7 +157,7 @@
 ;;         * Version 0.1.7
 ;;
 ;; 2010-03-18  S. Irie
-;;         * Added/modifed docstrings
+;;         * Added/modified docstrings
 ;;         * Changed working buffer name to " *xwininfo*"
 ;;         * Version 0.1.6
 ;;
@@ -916,11 +916,11 @@ See also `pos-tip-show-no-propertize'."
   "Hide pos-tip's tooltip.")
 
 (defun pos-tip-calibrate-frame-offset (&optional frame)
-  "Return coordinates of FRAME orign relative to the top left corner of
+  "Return coordinates of FRAME origin relative to the top left corner of
 the FRAME extent, like (LEFT . TOP). The return value is recorded to
 `pos-tip-frame-offset'.
 
-Note that this function does't correctly work for X frame and Emacs 22."
+Note that this function doesn't correctly work for X frame and Emacs 22."
   (setq pos-tip-frame-offset nil)
   (let* ((window (frame-first-window frame))
 	 (delete-frame-functions
