@@ -892,6 +892,8 @@ See also `pos-tip-show-no-propertize'."
   (let* ((frame (window-frame window))
 	 (max-width (pos-tip-x-display-width frame))
 	 (max-height (pos-tip-x-display-height frame))
+	 (backing-scale-factor (or (cdr (assq 'backing-scale-factor (frame-monitor-attributes)))
+                             1))
 	 (w-h (pos-tip-string-width-height string))
          (fg (pos-tip-compute-foreground-color tip-color))
          (bg (pos-tip-compute-background-color tip-color))
@@ -909,8 +911,8 @@ See also `pos-tip-show-no-propertize'."
     (pos-tip-show-no-propertize
      (propertize string 'face tip-face-attrs)
      tip-color pos window timeout
-     (pos-tip-tooltip-width (car w-h) (frame-char-width frame))
-     (pos-tip-tooltip-height (cdr w-h) (frame-char-height frame) frame)
+     (pos-tip-tooltip-width (car w-h) (* backing-scale-factor (frame-char-width frame)))
+     (pos-tip-tooltip-height (cdr w-h) (* backing-scale-factor (frame-char-height frame)) frame)
      frame-coordinates dx dy)))
 
 (defalias 'pos-tip-hide 'x-hide-tip
